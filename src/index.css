@@ -1,0 +1,359 @@
+/* ============================================================
+   Standalone 3D Scroll-Flip Gallery Stylesheet
+   Dark theme: Near-black background, off-white text, electric blue accent
+   ============================================================ */
+
+:root {
+  --bg-color: #0b0b10;
+  --text-color: #f5f5f5;
+  --text-muted: #94a3b8;
+  --accent-color: #00a2ff;
+  --accent-hover: #0084d1;
+  --card-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Reset & Page Layout --- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Main Layout Structure --- */
+.flip-gallery-outer {
+  position: relative;
+  width: 100vw;
+}
+
+.flip-gallery-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--bg-color);
+}
+
+.flip-gallery-content {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 45% 48%;
+  gap: 7%;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* ============================================================
+   COLUMN 1: 3D PHOTO CARD FRAME
+   ============================================================ */
+
+.flip-stack-wrapper {
+  width: 100%;
+}
+
+.flip-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  /* Perspective wrapper for the tilt */
+  perspective: 1200px;
+}
+
+/* Mobile Flat Fallback */
+.flip-card-single {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.flip-card-single img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Desktop: 3D perspective card container */
+.flip-card-perspective {
+  width: 100%;
+  height: 100%;
+  perspective: 1200px;
+}
+
+/* The card container that rotates on rotateY */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+  border-radius: 20px;
+  transform-origin: center center;
+}
+
+/* Face setup */
+.flip-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.flip-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Front Face */
+.flip-face-front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+/* Back Face pre-rotated 180deg */
+.flip-face-back {
+  z-index: 1;
+  transform: rotateY(180deg);
+}
+
+/* Subtle accent glow under the frame */
+.flip-frame::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 26px;
+  background: radial-gradient(circle, rgba(0, 162, 255, 0.15) 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ============================================================
+   COLUMN 2: TEXT PANEL & PROGRESS
+   ============================================================ */
+
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.info-panel-inner {
+  position: relative;
+  min-height: 220px;
+}
+
+.info-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Pill / Badge */
+.info-category {
+  display: inline-block;
+  background-color: rgba(0, 162, 255, 0.12);
+  color: var(--accent-color);
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(0, 162, 255, 0.2);
+}
+
+/* Title */
+.info-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 12px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+/* Description */
+.info-description {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+/* --- Progress Indicators --- */
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.progress-dot {
+  width: 24px;
+  height: 4px;
+  border-radius: 2px;
+  background-color: #2a2a35;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-dot.active {
+  background-color: var(--accent-color);
+  width: 40px;
+  box-shadow: 0 0 10px rgba(0, 162, 255, 0.4);
+}
+
+.progress-count {
+  font-size: 0.85rem;
+  color: #555565;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin-left: 4px;
+}
+
+/* Mobile Nav Arrows */
+.nav-arrow-btn {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 6px 12px;
+  transition: var(--transition);
+}
+
+.nav-arrow-btn:hover {
+  color: var(--text-color);
+  transform: scale(1.1);
+}
+
+/* --- Scroll Hint --- */
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #555565;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.8;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.scroll-hint.hidden {
+  opacity: 0;
+}
+
+.scroll-arrow {
+  width: 20px;
+  height: 20px;
+  border-right: 2px solid #555565;
+  border-bottom: 2px solid #555565;
+  transform: rotate(45deg);
+  animation: scrollBounce 2s infinite;
+}
+
+@keyframes scrollBounce {
+  0%, 100% {
+    transform: rotate(45deg) translate(0, 0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: rotate(45deg) translate(4px, 4px);
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .info-title {
+    font-size: 2.2rem;
+  }
+  .info-panel-inner {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .flip-gallery-sticky {
+    height: auto;
+    min-height: 100vh;
+    padding: 60px 0;
+  }
+  
+  .flip-gallery-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 24px;
+  }
+
+  .flip-frame {
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .info-panel {
+    text-align: center;
+    align-items: center;
+  }
+
+  .info-slide {
+    align-items: center;
+  }
+
+  .info-title {
+    font-size: 1.8rem;
+  }
+
+  .info-panel-inner {
+    min-height: 180px;
+  }
+
+  .progress-indicator {
+    justify-content: center;
+  }
+
+  .scroll-hint {
+    display: none;
+  }
+}
